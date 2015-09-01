@@ -14,6 +14,7 @@ $(function () {
     $(el).text('');
     (function addLetter () {
       $(el).append(message.shift())
+        console.log($(el))
       if (message.length > 0) setTimeout(addLetter, t)
       else {
         d.resolve(el)
@@ -22,28 +23,50 @@ $(function () {
     return d.promise
   }
 
+  let currentSound = false
+  function doAudio (h1) {
+    let d = Q.defer()
+    let sound
+
+    if (currentSound) currentSound.stop()
+
+    if ($(h1).data('sound')) {
+      sound = $(h1).data('sound')
+      sound.play()
+      d.resolve(h1)
+
+    } else if ($(h1).data('audio')) {
+      let url = $(h1).data('audio')
+      sound = soundManager.createSound({
+        id : url, 
+        url : url,
+        autoPlay: true,
+        volume : 50,
+        onplay : function () {
+          d.resolve(h1)
+        }
+      })
+      $(h1).data('sound', sound)
+    } else {
+      d.resolve(h1)
+    }
+    currentSound = sound
+    return d.promise
+  }
 
   $.fn.extend({
     doit : function() {
       return this.each(function(){
+
         $(this).width($(this).width())
-        var h1s = $(this).find('h1').hide().toArray();
-        (function doH1 () {
+
+        var h1s = $(this).find('h1.typed').hide().toArray()
+        ;(function doH1 () {
           if (h1s.length > 0) {
             var h1 = h1s.shift()
-            if ($(h1).data('audio')) {
-              var url = $(h1).data('audio')
-              soundManager.createSound({
-                id : url, 
-                url : url,
-                autoPlay: true,
-                onplay : function () {
-                  typeIn(h1).then(doH1)
-                }
-              })
-            } else {
-              typeIn(h1).then(doH1)
-            }
+            doAudio(h1)
+            .then(typeIn)
+            .then(doH1)
           }
         })()
       });
@@ -55,7 +78,7 @@ $(function () {
     url : '/audio/swf/',
     onready : function () {
       $('#slider').cycle({
-        fx: "none",
+        fx: "scrollHorz",
         slides: "div.section",
         next: ".next",
         timeout: 0,
@@ -65,7 +88,7 @@ $(function () {
       $('.morse').each(function () {
         $(this).text(morse.translate($(this).text()))
       })
-      $('.cover').fadeOut('slow', function () { $('.section:eq(1)').doit() })
+      $('.cover').fadeOut('slow')
     }
   })
 
@@ -75,6 +98,7 @@ $(function () {
     $('.preloader .loaded').show();
   });
 
+  $(this).find('h1.bottom').wrapInner("<div class='pad'></div>")
 
   $(document.documentElement).keyup(function (e) {
       if (e.keyCode == 39) {        
@@ -93,9 +117,14 @@ $(function () {
        		$('#slider').cycle('prev');
 		});
 
-    $( '#slider' ).on( 'cycle-before', function(event, optionHash, outgoingSlideEl, incomingSlideEl, forwardFlag) {
-			$(incomingSlideEl).doit()
-		});
+    let lastSlide = false
+    $( '#slider' ).on( 'cycle-update-view', (event, optionHash, outgoingSlideEl, incomingSlideEl, forwardFlag) => {
+      if ( lastSlide !== optionHash.currSlide) {
+        $('#slider .cycle-slide-active.s-' + optionHash.currSlide ).doit()
+        lastSlide = optionHash.currSlide
+      }
+      console.log(optionHash)
+    } );
 
     function launchIntoFullscreen(element) {
 		  if(element.requestFullscreen) {

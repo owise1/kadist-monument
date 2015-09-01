@@ -3,6 +3,7 @@ var gulp   = require('gulp')
 var less       = require('gulp-less')
 var browserify = require('gulp-browserify')
 var autoprefixer = require('gulp-autoprefixer')
+var babel = require("gulp-babel")
 
 var paths = {
   scripts: [],
@@ -23,6 +24,7 @@ gulp.task('less', function(){
 
 gulp.task('js', function(){
   return gulp.src(paths.watchBase + 'site.js')
+  .pipe(babel())
   .pipe(browserify({
     insertGlobals : true
   }))

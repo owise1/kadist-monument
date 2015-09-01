@@ -11604,64 +11604,83 @@ return Q;
 }).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../node_modules/ramda/dist/ramda.js","/../node_modules/ramda/dist")
 },{"1YiZ5S":4,"buffer":1}],11:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-var imagesLoaded = require('imagesLoaded')
-var morse = new (require('morsecode'))()
-var soundManager = require('./soundmanager2.js').soundManager
-var Q = require('q')
-var R = require('ramda')
+'use strict';
+
+var imagesLoaded = require('imagesLoaded');
+var morse = new (require('morsecode'))();
+var soundManager = require('./soundmanager2.js').soundManager;
+var Q = require('q');
+var R = require('ramda');
 
 $(function () {
 
-  function typeIn (el) {
-    var t = $(el).is('.morse') ? 80 : 200
-    var d = Q.defer()
-    var message = $(el).text().split('')
-    $(el).show()
+  function typeIn(el) {
+    var t = $(el).is('.morse') ? 80 : 200;
+    var d = Q.defer();
+    var message = $(el).text().split('');
+    $(el).show();
     $(el).text('');
-    (function addLetter () {
-      $(el).append(message.shift())
-      if (message.length > 0) setTimeout(addLetter, t)
-      else {
-        d.resolve(el)
+    (function addLetter() {
+      $(el).append(message.shift());
+      console.log($(el));
+      if (message.length > 0) setTimeout(addLetter, t);else {
+        d.resolve(el);
       }
-    })()
-    return d.promise
+    })();
+    return d.promise;
   }
 
+  var currentSound = false;
+  function doAudio(h1) {
+    var d = Q.defer();
+    var sound = undefined;
+
+    if (currentSound) currentSound.stop();
+
+    if ($(h1).data('sound')) {
+      sound = $(h1).data('sound');
+      sound.play();
+      d.resolve(h1);
+    } else if ($(h1).data('audio')) {
+      var url = $(h1).data('audio');
+      sound = soundManager.createSound({
+        id: url,
+        url: url,
+        autoPlay: true,
+        volume: 50,
+        onplay: function onplay() {
+          d.resolve(h1);
+        }
+      });
+      $(h1).data('sound', sound);
+    } else {
+      d.resolve(h1);
+    }
+    currentSound = sound;
+    return d.promise;
+  }
 
   $.fn.extend({
-    doit : function() {
-      return this.each(function(){
-        $(this).width($(this).width())
-        var h1s = $(this).find('h1').hide().toArray();
-        (function doH1 () {
+    doit: function doit() {
+      return this.each(function () {
+
+        $(this).width($(this).width());
+
+        var h1s = $(this).find('h1.typed').hide().toArray();(function doH1() {
           if (h1s.length > 0) {
-            var h1 = h1s.shift()
-            if ($(h1).data('audio')) {
-              var url = $(h1).data('audio')
-              soundManager.createSound({
-                id : url, 
-                url : url,
-                autoPlay: true,
-                onplay : function () {
-                  typeIn(h1).then(doH1)
-                }
-              })
-            } else {
-              typeIn(h1).then(doH1)
-            }
+            var h1 = h1s.shift();
+            doAudio(h1).then(typeIn).then(doH1);
           }
-        })()
+        })();
       });
     }
   });
 
-
   soundManager.setup({
-    url : '/audio/swf/',
-    onready : function () {
+    url: '/audio/swf/',
+    onready: function onready() {
       $('#slider').cycle({
-        fx: "none",
+        fx: "scrollHorz",
         slides: "div.section",
         next: ".next",
         timeout: 0,
@@ -11669,83 +11688,80 @@ $(function () {
         swipe: true
       });
       $('.morse').each(function () {
-        $(this).text(morse.translate($(this).text()))
-      })
-      $('.cover').fadeOut('slow', function () { $('.section:eq(1)').doit() })
+        $(this).text(morse.translate($(this).text()));
+      });
+      $('.cover').fadeOut('slow');
     }
-  })
+  });
 
-
-  $('#slider').imagesLoaded( function() {
+  $('#slider').imagesLoaded(function () {
     $('.preloader .loader').hide();
     $('.preloader .loaded').show();
   });
 
+  $(this).find('h1.bottom').wrapInner("<div class='pad'></div>");
 
   $(document.documentElement).keyup(function (e) {
-      if (e.keyCode == 39) {        
-         $('#slider').cycle('next');
-      }
+    if (e.keyCode == 39) {
+      $('#slider').cycle('next');
+    }
 
-      if (e.keyCode == 37) {
-          $('#slider').cycle('prev');
-      }
+    if (e.keyCode == 37) {
+      $('#slider').cycle('prev');
+    }
   });
 
-  $( ".slide_next" ).click(function() {
-       		$('#slider').cycle('next');
-		});
-		$( ".slide_prev" ).click(function() {
-       		$('#slider').cycle('prev');
-		});
+  $(".slide_next").click(function () {
+    $('#slider').cycle('next');
+  });
+  $(".slide_prev").click(function () {
+    $('#slider').cycle('prev');
+  });
 
-    $( '#slider' ).on( 'cycle-before', function(event, optionHash, outgoingSlideEl, incomingSlideEl, forwardFlag) {
-			$(incomingSlideEl).doit()
-		});
+  var lastSlide = false;
+  $('#slider').on('cycle-update-view', function (event, optionHash, outgoingSlideEl, incomingSlideEl, forwardFlag) {
+    if (lastSlide !== optionHash.currSlide) {
+      $('#slider .cycle-slide-active.s-' + optionHash.currSlide).doit();
+      lastSlide = optionHash.currSlide;
+    }
+    console.log(optionHash);
+  });
 
-    function launchIntoFullscreen(element) {
-		  if(element.requestFullscreen) {
-		    element.requestFullscreen();
-		  } else if(element.mozRequestFullScreen) {
-		    element.mozRequestFullScreen();
-		  } else if(element.webkitRequestFullscreen) {
-		    element.webkitRequestFullscreen();
-		  } else if(element.msRequestFullscreen) {
-		    element.msRequestFullscreen();
-		  }
-		}
-		function exitFullscreen() {
-		  if(document.exitFullscreen) {
-		    document.exitFullscreen();
-		  } else if(document.mozCancelFullScreen) {
-		    document.mozCancelFullScreen();
-		  } else if(document.webkitExitFullscreen) {
-		    document.webkitExitFullscreen();
-		  }
-		}
+  function launchIntoFullscreen(element) {
+    if (element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if (element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if (element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  }
+  function exitFullscreen() {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  }
 
-		$( ".slide_full" ).click(function() {
+  $(".slide_full").click(function () {
 
-	    if ( $( this ).hasClass( "active" ) ) {
+    if ($(this).hasClass("active")) {
 
-				$(this).removeClass('active');
-				exitFullscreen(document.documentElement);
+      $(this).removeClass('active');
+      exitFullscreen(document.documentElement);
+    } else {
 
-	    } else {
-				
-				$(this).addClass('active');
-				launchIntoFullscreen(document.documentElement);
-
-	    }
-
-		});
-  
-  
-
-})
-
-
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5241ffed.js","/")
+      $(this).addClass('active');
+      launchIntoFullscreen(document.documentElement);
+    }
+  });
+});
+}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_4f6150c1.js","/")
 },{"./soundmanager2.js":12,"1YiZ5S":4,"buffer":1,"imagesLoaded":5,"morsecode":8,"q":9,"ramda":10}],12:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /** @license

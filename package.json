@@ -25,6 +25,7 @@
     "browserify": "^10.0.0",
     "gulp": "^3.8.11",
     "gulp-autoprefixer": "^2.3.1",
+    "gulp-babel": "^5.2.1",
     "gulp-browserify": "^0.5.1",
     "gulp-less": "^3.0.3"
   }
