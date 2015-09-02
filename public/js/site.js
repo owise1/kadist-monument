@@ -11614,16 +11614,26 @@ var R = require('ramda');
 
 $(function () {
 
+  function getEl(el) {
+    return $(el).find('.pad')[0] || el;
+  }
+
+  var typeTout = undefined;
   function typeIn(el) {
+    $(el).show();
+    clearTimeout(typeTout);
+
     var t = $(el).is('.morse') ? 80 : 200;
     var d = Q.defer();
-    var message = $(el).text().split('');
-    $(el).show();
-    $(el).text('');
+    var message = $(el).data('typed').split('');
+    var theEl = getEl(el);
+
+    $(theEl).text('');
     (function addLetter() {
-      $(el).append(message.shift());
-      console.log($(el));
-      if (message.length > 0) setTimeout(addLetter, t);else {
+      $(theEl).append(message.shift());
+      if (message.length > 0) {
+        typeTout = setTimeout(addLetter, t);
+      } else {
         d.resolve(el);
       }
     })();
@@ -11687,9 +11697,6 @@ $(function () {
         log: false,
         swipe: true
       });
-      $('.morse').each(function () {
-        $(this).text(morse.translate($(this).text()));
-      });
       $('.cover').fadeOut('slow');
     }
   });
@@ -11699,13 +11706,10 @@ $(function () {
     $('.preloader .loaded').show();
   });
 
-  $(this).find('h1.bottom').wrapInner("<div class='pad'></div>");
-
   $(document.documentElement).keyup(function (e) {
     if (e.keyCode == 39) {
       $('#slider').cycle('next');
     }
-
     if (e.keyCode == 37) {
       $('#slider').cycle('prev');
     }
@@ -11718,13 +11722,21 @@ $(function () {
     $('#slider').cycle('prev');
   });
 
+  // init
+  $('.morse').each(function () {
+    $(this).text(morse.translate($(this).text()));
+  });
+  $('h1.typed').each(function () {
+    $(this).data('typed', $(this).text()).text('');
+  });
+  $(this).find('h1.bottom').wrapInner("<div class='pad'></div>");
+
   var lastSlide = false;
   $('#slider').on('cycle-update-view', function (event, optionHash, outgoingSlideEl, incomingSlideEl, forwardFlag) {
     if (lastSlide !== optionHash.currSlide) {
       $('#slider .cycle-slide-active.s-' + optionHash.currSlide).doit();
       lastSlide = optionHash.currSlide;
     }
-    console.log(optionHash);
   });
 
   function launchIntoFullscreen(element) {
@@ -11761,7 +11773,7 @@ $(function () {
     }
   });
 });
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_4f6150c1.js","/")
+}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a83b8791.js","/")
 },{"./soundmanager2.js":12,"1YiZ5S":4,"buffer":1,"imagesLoaded":5,"morsecode":8,"q":9,"ramda":10}],12:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /** @license

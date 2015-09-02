@@ -1,22 +1,31 @@
-var imagesLoaded = require('imagesLoaded')
-var morse = new (require('morsecode'))()
-var soundManager = require('./soundmanager2.js').soundManager
-var Q = require('q')
-var R = require('ramda')
+const imagesLoaded = require('imagesLoaded')
+const morse = new (require('morsecode'))()
+const soundManager = require('./soundmanager2.js').soundManager
+const Q = require('q')
+const R = require('ramda')
 
 $(function () {
 
+  function getEl (el) {
+    return $(el).find('.pad')[0] || el
+  }
+
+  let typeTout
   function typeIn (el) {
-    var t = $(el).is('.morse') ? 80 : 200
-    var d = Q.defer()
-    var message = $(el).text().split('')
     $(el).show()
-    $(el).text('');
+    clearTimeout(typeTout)
+
+    let t = $(el).is('.morse') ? 80 : 200
+    let d = Q.defer()
+    let message = $(el).data('typed').split('')
+    let theEl = getEl(el) 
+
+    $(theEl).text('');
     (function addLetter () {
-      $(el).append(message.shift())
-        console.log($(el))
-      if (message.length > 0) setTimeout(addLetter, t)
-      else {
+      $(theEl).append(message.shift())
+      if (message.length > 0) { 
+        typeTout = setTimeout(addLetter, t) 
+      } else {
         d.resolve(el)
       }
     })()
@@ -85,83 +94,86 @@ $(function () {
         log: false,
         swipe: true
       });
-      $('.morse').each(function () {
-        $(this).text(morse.translate($(this).text()))
-      })
       $('.cover').fadeOut('slow')
     }
   })
 
 
   $('#slider').imagesLoaded( function() {
-    $('.preloader .loader').hide();
-    $('.preloader .loaded').show();
+    $('.preloader .loader').hide()
+    $('.preloader .loaded').show()
   });
 
-  $(this).find('h1.bottom').wrapInner("<div class='pad'></div>")
 
   $(document.documentElement).keyup(function (e) {
-      if (e.keyCode == 39) {        
-         $('#slider').cycle('next');
-      }
-
-      if (e.keyCode == 37) {
-          $('#slider').cycle('prev');
-      }
-  });
+    if (e.keyCode == 39) {        
+     $('#slider').cycle('next')
+    }
+    if (e.keyCode == 37) {
+      $('#slider').cycle('prev')
+    }
+  })
 
   $( ".slide_next" ).click(function() {
-       		$('#slider').cycle('next');
-		});
-		$( ".slide_prev" ).click(function() {
-       		$('#slider').cycle('prev');
-		});
+    $('#slider').cycle('next')
+  })
+  $( ".slide_prev" ).click(function() {
+    $('#slider').cycle('prev')
+  })
 
-    let lastSlide = false
-    $( '#slider' ).on( 'cycle-update-view', (event, optionHash, outgoingSlideEl, incomingSlideEl, forwardFlag) => {
-      if ( lastSlide !== optionHash.currSlide) {
-        $('#slider .cycle-slide-active.s-' + optionHash.currSlide ).doit()
-        lastSlide = optionHash.currSlide
-      }
-      console.log(optionHash)
-    } );
+  // init
+  $('.morse').each(function () {
+    $(this).text(morse.translate($(this).text()))
+  })
+  $('h1.typed').each(function () {
+    $(this).data('typed', $(this).text()).text('')
+  })
+  $(this).find('h1.bottom').wrapInner("<div class='pad'></div>")
 
-    function launchIntoFullscreen(element) {
-		  if(element.requestFullscreen) {
-		    element.requestFullscreen();
-		  } else if(element.mozRequestFullScreen) {
-		    element.mozRequestFullScreen();
-		  } else if(element.webkitRequestFullscreen) {
-		    element.webkitRequestFullscreen();
-		  } else if(element.msRequestFullscreen) {
-		    element.msRequestFullscreen();
-		  }
-		}
-		function exitFullscreen() {
-		  if(document.exitFullscreen) {
-		    document.exitFullscreen();
-		  } else if(document.mozCancelFullScreen) {
-		    document.mozCancelFullScreen();
-		  } else if(document.webkitExitFullscreen) {
-		    document.webkitExitFullscreen();
-		  }
-		}
+  let lastSlide = false
+  $( '#slider' ).on( 'cycle-update-view', (event, optionHash, outgoingSlideEl, incomingSlideEl, forwardFlag) => {
+    if ( lastSlide !== optionHash.currSlide) {
+      $('#slider .cycle-slide-active.s-' + optionHash.currSlide ).doit()
+      lastSlide = optionHash.currSlide
+    }
+  })
 
-		$( ".slide_full" ).click(function() {
+  function launchIntoFullscreen(element) {
+    if(element.requestFullscreen) {
+      element.requestFullscreen()
+    } else if(element.mozRequestFullScreen) {
+      element.mozRequestFullScreen()
+    } else if(element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen()
+    } else if(element.msRequestFullscreen) {
+      element.msRequestFullscreen()
+    }
+  }
+  function exitFullscreen() {
+    if(document.exitFullscreen) {
+      document.exitFullscreen()
+    } else if(document.mozCancelFullScreen) {
+      document.mozCancelFullScreen()
+    } else if(document.webkitExitFullscreen) {
+      document.webkitExitFullscreen()
+    }
+  }
 
-	    if ( $( this ).hasClass( "active" ) ) {
+  $( ".slide_full" ).click(function() {
 
-				$(this).removeClass('active');
-				exitFullscreen(document.documentElement);
+    if ( $( this ).hasClass( "active" ) ) {
 
-	    } else {
-				
-				$(this).addClass('active');
-				launchIntoFullscreen(document.documentElement);
+      $(this).removeClass('active')
+      exitFullscreen(document.documentElement)
 
-	    }
+    } else {
+      
+      $(this).addClass('active')
+      launchIntoFullscreen(document.documentElement)
 
-		});
+    }
+
+  })
   
   
 
