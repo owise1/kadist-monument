@@ -11623,7 +11623,8 @@ $(function () {
     $(el).show();
     clearTimeout(typeTout);
 
-    var t = $(el).is('.morse') ? 80 : 200;
+    var t = $(el).data('speed') || ($(el).is('.morse') ? 80 : 200);
+    t = parseInt(t, 10);
     var d = Q.defer();
     var message = $(el).data('typed').split('');
     var theEl = getEl(el);
@@ -11657,7 +11658,7 @@ $(function () {
         id: url,
         url: url,
         autoPlay: true,
-        volume: 50,
+        volume: 40,
         onplay: function onplay() {
           d.resolve(h1);
         }
@@ -11668,6 +11669,17 @@ $(function () {
     }
     currentSound = sound;
     return d.promise;
+  }
+
+  function doSlider() {
+    $('#slider').cycle({
+      fx: "scrollHorz",
+      slides: "div.section",
+      next: ".next",
+      timeout: 0,
+      log: false,
+      swipe: true
+    });
   }
 
   $.fn.extend({
@@ -11689,14 +11701,7 @@ $(function () {
   soundManager.setup({
     url: '/audio/swf/',
     onready: function onready() {
-      $('#slider').cycle({
-        fx: "scrollHorz",
-        slides: "div.section",
-        next: ".next",
-        timeout: 0,
-        log: false,
-        swipe: true
-      });
+      doSlider();
       $('.cover').fadeOut('slow');
     }
   });
@@ -11761,19 +11766,17 @@ $(function () {
   }
 
   $(".slide_full").click(function () {
-
     if ($(this).hasClass("active")) {
-
       $(this).removeClass('active');
       exitFullscreen(document.documentElement);
     } else {
-
       $(this).addClass('active');
       launchIntoFullscreen(document.documentElement);
     }
+    doSlider();
   });
 });
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a83b8791.js","/")
+}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e2078393.js","/")
 },{"./soundmanager2.js":12,"1YiZ5S":4,"buffer":1,"imagesLoaded":5,"morsecode":8,"q":9,"ramda":10}],12:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /** @license

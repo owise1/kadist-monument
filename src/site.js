@@ -15,7 +15,8 @@ $(function () {
     $(el).show()
     clearTimeout(typeTout)
 
-    let t = $(el).is('.morse') ? 80 : 200
+    let t = $(el).data('speed') || ($(el).is('.morse') ? 80 : 200)
+    t = parseInt(t, 10)
     let d = Q.defer()
     let message = $(el).data('typed').split('')
     let theEl = getEl(el) 
@@ -50,7 +51,7 @@ $(function () {
         id : url, 
         url : url,
         autoPlay: true,
-        volume : 50,
+        volume : 40,
         onplay : function () {
           d.resolve(h1)
         }
@@ -61,6 +62,17 @@ $(function () {
     }
     currentSound = sound
     return d.promise
+  }
+
+  function doSlider () {
+    $('#slider').cycle({
+      fx: "scrollHorz",
+      slides: "div.section",
+      next: ".next",
+      timeout: 0,
+      log: false,
+      swipe: true
+    });
   }
 
   $.fn.extend({
@@ -86,14 +98,7 @@ $(function () {
   soundManager.setup({
     url : '/audio/swf/',
     onready : function () {
-      $('#slider').cycle({
-        fx: "scrollHorz",
-        slides: "div.section",
-        next: ".next",
-        timeout: 0,
-        log: false,
-        swipe: true
-      });
+      doSlider()
       $('.cover').fadeOut('slow')
     }
   })
@@ -160,22 +165,15 @@ $(function () {
   }
 
   $( ".slide_full" ).click(function() {
-
     if ( $( this ).hasClass( "active" ) ) {
-
       $(this).removeClass('active')
       exitFullscreen(document.documentElement)
-
     } else {
-      
       $(this).addClass('active')
       launchIntoFullscreen(document.documentElement)
-
     }
-
+    doSlider()
   })
-  
-  
 
 })
 
