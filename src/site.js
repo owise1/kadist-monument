@@ -51,7 +51,7 @@ $(function () {
         id : url, 
         url : url,
         autoPlay: true,
-        volume : 40,
+        volume : /morse/.test(url) ? 10 : 50,
         onplay : function () {
           d.resolve(h1)
         }
