@@ -173,7 +173,7 @@ $(function () {
       $(this).addClass('active')
       launchIntoFullscreen(document.documentElement)
     }
-    doSlider()
+    setTimeout(doSlider, 1000)
   })
 
 })

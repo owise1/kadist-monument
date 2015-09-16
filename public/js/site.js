@@ -11775,10 +11775,10 @@ $(function () {
       $(this).addClass('active');
       launchIntoFullscreen(document.documentElement);
     }
-    doSlider();
+    setTimeout(doSlider, 1000);
   });
 });
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d285fe78.js","/")
+}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_2f83103f.js","/")
 },{"./soundmanager2.js":12,"1YiZ5S":4,"buffer":1,"imagesLoaded":5,"morsecode":8,"q":9,"ramda":10}],12:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /** @license
