@@ -54,7 +54,7 @@ $(function () {
         id : url, 
         url : url,
         autoPlay: true,
-        volume : /morse/.test(url) ? 10 : 50,
+        volume : /morse/.test(url) ? 2 : 70,
         onplay : function () {
           d.resolve(h1)
         }
@@ -98,18 +98,16 @@ $(function () {
   });
 
 
-  soundManager.setup({
-    url : '/audio/swf/',
-    onready : function () {
-      doSlider()
-      $('.cover').fadeOut('slow')
-    }
-  })
-
-
   $('#slider').imagesLoaded( function() {
     $('.preloader .loader').hide()
-    $('.preloader .loaded').show()
+    $('.loaded').show()
+    soundManager.setup({
+      url : '/audio/swf/',
+      onready : function () {
+        $('.cover').fadeOut('slow')
+        doSlider()
+      }
+    })
   });
 
 
@@ -131,8 +129,6 @@ $(function () {
 
   // init
   $('.morse').each(function () {
-    console.log(morse.translate($(this).text()))
-
     $(this).text(morse.translate($(this).text()))
   })
   $('h1.typed').each(function () {

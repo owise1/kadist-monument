@@ -11661,7 +11661,7 @@ $(function () {
         id: url,
         url: url,
         autoPlay: true,
-        volume: /morse/.test(url) ? 10 : 50,
+        volume: /morse/.test(url) ? 2 : 70,
         onplay: function onplay() {
           d.resolve(h1);
         }
@@ -11701,17 +11701,16 @@ $(function () {
     }
   });
 
-  soundManager.setup({
-    url: '/audio/swf/',
-    onready: function onready() {
-      doSlider();
-      $('.cover').fadeOut('slow');
-    }
-  });
-
   $('#slider').imagesLoaded(function () {
     $('.preloader .loader').hide();
-    $('.preloader .loaded').show();
+    $('.loaded').show();
+    soundManager.setup({
+      url: '/audio/swf/',
+      onready: function onready() {
+        $('.cover').fadeOut('slow');
+        doSlider();
+      }
+    });
   });
 
   $(document.documentElement).keyup(function (e) {
@@ -11732,8 +11731,6 @@ $(function () {
 
   // init
   $('.morse').each(function () {
-    console.log(morse.translate($(this).text()));
-
     $(this).text(morse.translate($(this).text()));
   });
   $('h1.typed').each(function () {
@@ -11781,7 +11778,7 @@ $(function () {
     doSlider();
   });
 });
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_ab6436d1.js","/")
+}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d285fe78.js","/")
 },{"./soundmanager2.js":12,"1YiZ5S":4,"buffer":1,"imagesLoaded":5,"morsecode":8,"q":9,"ramda":10}],12:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /** @license
