@@ -44,6 +44,7 @@ a {
   height: 100vh;
 }
 #slider .inner h1 {
+  text-transform: uppercase;
   margin-top: 0;
   margin-bottom: 0px;
   font-size: 40px;
@@ -68,22 +69,35 @@ a {
   padding-top: 50px;
   max-height: 66vh;
 }
+#slider .inner.lr h1 {
+  width: 60%;
+}
+#slider .inner.lr img {
+  position: absolute;
+  bottom: 150px;
+  right: 50px;
+  width: 38%;
+  max-height: none !important;
+  max-width: 40% !important;
+}
 #slider .inner .loaded {
   font-family: monaco,Consolas,Lucida Console,monospace;
-  font-size: .7rem;
+}
+#slider .inner .loaded p {
+  font-family: monaco,Consolas,Lucida Console,monospace;
+  text-transform: uppercase;
 }
 #slider .inner button {
   font-family: monaco,Consolas,Lucida Console,monospace;
   border: 1px solid #fff;
   color: #fff;
-  background: #000;
+  background: #272727;
   padding: .5rem 1rem;
   border-radius: 0;
   margin-top: 4rem;
   text-transform: uppercase;
   cursor: pointer;
-  font-size: .7rem;
-  /*transition: all 500ms ease-out;*/
+  transition: all 500ms ease-out;
 }
 #slider .inner button:hover {
   background: #fff;

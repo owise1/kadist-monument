@@ -4,6 +4,9 @@ const soundManager = require('./soundmanager2.js').soundManager
 const Q = require('q')
 const R = require('ramda')
 
+// clean up morseCode
+morse.theCode = R.mapObj(R.replace(/ /g, ''), morse.theCode)
+
 $(function () {
 
   function getEl (el) {
@@ -128,6 +131,8 @@ $(function () {
 
   // init
   $('.morse').each(function () {
+    console.log(morse.translate($(this).text()))
+
     $(this).text(morse.translate($(this).text()))
   })
   $('h1.typed').each(function () {

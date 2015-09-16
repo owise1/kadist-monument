@@ -11612,6 +11612,9 @@ var soundManager = require('./soundmanager2.js').soundManager;
 var Q = require('q');
 var R = require('ramda');
 
+// clean up morseCode
+morse.theCode = R.mapObj(R.replace(/ /g, ''), morse.theCode);
+
 $(function () {
 
   function getEl(el) {
@@ -11729,6 +11732,8 @@ $(function () {
 
   // init
   $('.morse').each(function () {
+    console.log(morse.translate($(this).text()));
+
     $(this).text(morse.translate($(this).text()));
   });
   $('h1.typed').each(function () {
@@ -11776,7 +11781,7 @@ $(function () {
     doSlider();
   });
 });
-}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_1a9a57fb.js","/")
+}).call(this,require("1YiZ5S"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_ab6436d1.js","/")
 },{"./soundmanager2.js":12,"1YiZ5S":4,"buffer":1,"imagesLoaded":5,"morsecode":8,"q":9,"ramda":10}],12:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /** @license
