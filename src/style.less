@@ -66,6 +66,16 @@ a{
           padding: 50px 50px 30px;
         }
       }
+      &.colophon{
+        padding: 50px 50px ;
+        text-align: left; 
+        a{
+          text-decoration: none;
+          color: #fff;
+          cursor: text;
+        }
+
+      }
     }
     img{
       display: block;
@@ -106,7 +116,6 @@ a{
       margin: 4rem 5px 0;
       text-transform: uppercase;
       cursor: pointer;
-      transition: all 500ms ease-out;
       font-size:  14px;
       &:hover{
         background: #fff;
@@ -115,6 +124,10 @@ a{
     }
   }
 }
+.cycle-slide-active button{
+  transition: all 500ms ease-out;
+}
+
 
 .loader,
 .loader:after,
