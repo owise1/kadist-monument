@@ -1,21 +1,12 @@
 {
-  "name": "monument",
+  "name": "kadist-monument",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {},
-  "author": "",
-  "license": "ISC",
+  "author": "owise1",
+  "license": "MIT",
   "dependencies": {
-    "debowerify": "^1.3.1",
-    "express": "^4.12.3",
-    "imagesloaded": "^3.1.8",
-    "jquery": "^2.1.4",
-    "morsecode": "^1.0.0",
-    "node-fetch": "^1.1.2",
-    "q": "^1.3.0",
-    "ramda": "^0.13.0",
-    "zepto": "0.0.4"
   },
   "browserify": {
     "trandform": [
@@ -23,6 +14,13 @@
     ]
   },
   "devDependencies": {
+    "debowerify": "^1.3.1",
+    "express": "^4.12.3",
+    "imagesloaded": "^3.1.8",
+    "jquery": "^2.1.4",
+    "morsecode": "^1.0.0",
+    "q": "^1.3.0",
+    "ramda": "^0.13.0",
     "browserify": "^10.0.0",
     "gulp": "^3.8.11",
     "gulp-autoprefixer": "^2.3.1",
