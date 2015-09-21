@@ -78,6 +78,17 @@ a {
   color: #fff;
   cursor: text;
 }
+#slider .inner h1.colophon a.social {
+  cursor: pointer;
+  background: url(/images/twitter.png) top center no-repeat;
+  display: inline-block;
+  width: 40px;
+  height: 48px;
+}
+#slider .inner h1.colophon a.social.fb {
+  background-image: url(/images/facebook.png);
+  background-position-y: -2px;
+}
 #slider .inner img {
   display: block;
   max-width: 70%;

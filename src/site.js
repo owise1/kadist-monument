@@ -3,6 +3,7 @@ const morse = new (require('morsecode'))()
 const soundManager = require('./soundmanager2.js').soundManager
 const Q = require('q')
 const R = require('ramda')
+require('./zepto.min.js')
 
 // clean up morseCode
 morse.theCode = R.mapObj(R.replace(/ /g, ''), morse.theCode)
@@ -126,6 +127,10 @@ $(function () {
   $( ".slide_prev" ).click(function() {
     $('#slider').cycle('prev')
   })
+  if (!!Zepto.os.phone || !!Zepto.os.tablet) {
+    $('.desktop').hide();
+    $('.touch').show();
+  }
 
   // init
   $('.morse').each(function () {
